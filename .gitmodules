@@ -1,0 +1,6 @@
+[submodule "BCU-Master-H10"]
+	path = BCU-Master-H10
+	url = https://github.com/HyperloopUPV-H8/BCU-Master-H10.git
+[submodule "BCU-Slave-H10"]
+	path = BCU-Slave-H10
+	url = https://github.com/HyperloopUPV-H8/BCU-Slave-H10.git
