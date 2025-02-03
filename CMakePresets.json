@@ -4,7 +4,7 @@
         {
             "name": "mcu",
             "hidden": true,
-            "generator": "Unix Makefiles",
+            "generator": "Ninja",
             "binaryDir": "${sourceDir}/out/build/${presetName}",
             "toolchainFile": "${sourceDir}/toolchains/stm32.cmake",
             "installDir": "${sourceDir}/out/install/${presetName}",
@@ -16,7 +16,7 @@
         {
             "name": "sim",
             "hidden": true,
-            "generator": "Unix Makefiles",
+            "generator": "Ninja",
             "binaryDir": "${sourceDir}/out/build/${presetName}",
             "installDir": "${sourceDir}/out/install/${presetName}",
             "cacheVariables": {
