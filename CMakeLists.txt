@@ -22,9 +22,15 @@ if (PROJECT_IS_TOP_LEVEL AND NOT CMAKE_CROSSCOMPILING)
   target_link_libraries(GTest::GTest INTERFACE gtest_main)
 endif()
 
+file(GLOB_RECURSE SOURCE_BCU_SHARED_CPP ${CMAKE_CURRENT_LIST_DIR}/BCU-Shared-H10/*.cpp) 
+file(GLOB_RECURSE SOURCE_BCU_SHARED_HPP ${CMAKE_CURRENT_LIST_DIR}/BCU-Shared-H10/*.hpp) 
+
 add_subdirectory(BCU-Master-H10)
+target_include_directories(BCU-Master.elf PRIVATE ${CMAKE_CURRENT_LIST_DIR}/BCU-Shared-H10/Inc)
+
 set(USE_ETHERNET OFF)
 add_subdirectory(BCU-Slave-H10)
+target_include_directories(BCU-Slave.elf PRIVATE ${CMAKE_CURRENT_LIST_DIR}/BCU-Shared-H10/Inc)
 
 if (PROJECT_IS_TOP_LEVEL)
     # Create symlink to compile_commands.json for IDE to pick it up
