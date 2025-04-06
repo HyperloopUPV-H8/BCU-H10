@@ -97,4 +97,5 @@
     "variant": "cpp",
     "format": "cpp"
   },
+  "cortex-debug.variableUseNaturalFormat": true,
 }
