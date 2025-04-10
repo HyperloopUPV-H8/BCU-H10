@@ -10,6 +10,7 @@ SharedStateMachine::SharedStateMachine()
 
     nested_state_machine.add_state(NestedState::Ready);
     nested_state_machine.add_state(NestedState::Boosting);
+    nested_state_machine.add_state(NestedState::Testing);
 
     general_state_machine.add_state_machine(nested_state_machine,
                                             GeneralState::Operational);
@@ -17,4 +18,4 @@ SharedStateMachine::SharedStateMachine()
 
 };  // namespace BCU::Shared::State
 
-//0x2404fdc9 ""
+// 0x2404fdc9 ""

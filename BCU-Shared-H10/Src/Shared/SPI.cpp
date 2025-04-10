@@ -16,47 +16,134 @@ SPIStackOrder *create_state_order(StateMachine::state_id *master_general_state,
             slave_general_state, slave_nested_state}};
 }
 
-SPIStackOrder *create_control_order(
-    std::array<PhaseCurrents, 4> phase_currents,
-    std::array<float *, 4> dc_link_voltages,
-    std::array<float *, 4> inverter_temperatures, float *position, float *speed,
-    float *acceleration) {
-    static SPIPacket<sizeof(float) * 4, float, float, float, float>
-        master_packet{inverter_temperatures[0], inverter_temperatures[1],
-                      inverter_temperatures[2], inverter_temperatures[3]};
+SPIStackOrder *create_control_parameters_order(
+    double *velocity_reference, double *velocity_error,
+    double *u_current_measurement, double *v_current_measurement,
+    double *w_current_measurement, double *electrical_angle,
+    double *d_current_reference, double *d_current_measurement,
+    double *d_current_error, double *q_current_reference,
+    double *q_current_measurement, double *q_current_error,
+    double *three_phase_unbalance, double *d_target_voltage,
+    double *q_target_voltage, double *u_target_voltage,
+    double *v_target_voltage, double *w_target_voltage,
+    double *u_output_voltage, double *v_output_voltage,
+    double *w_output_voltage, double *u_duty_cycle, double *v_duty_cycle,
+    double *w_duty_cycle, double *angular_velocity) {
+    return new SPIStackOrder{
+        998, *new SPIPacket<0>(),
+        *new SPIPacket<sizeof(double) * 25, double, double, double, double,
+                       double, double, double, double, double, double, double,
+                       double, double, double, double, double, double, double,
+                       double, double, double, double, double, double, double>(
+            velocity_reference, velocity_error, u_current_measurement,
+            v_current_measurement, w_current_measurement, electrical_angle,
+            d_current_reference, d_current_measurement, d_current_error,
+            q_current_reference, q_current_measurement, q_current_error,
+            three_phase_unbalance, d_target_voltage, q_target_voltage,
+            u_target_voltage, v_target_voltage, w_target_voltage,
+            u_output_voltage, v_output_voltage, w_output_voltage, u_duty_cycle,
+            v_duty_cycle, w_duty_cycle, angular_velocity)};
+};
 
-    static SPIPacket<sizeof(float) * 19, float, float, float, float, float,
-                     float, float, float, float, float, float, float, float,
-                     float, float, float, float, float, float>
-        slave_packet{phase_currents[0].u,
-                     phase_currents[0].v,
-                     phase_currents[0].w,
-                     phase_currents[1].u,
-                     phase_currents[1].v,
-                     phase_currents[1].w,
-                     phase_currents[2].u,
-                     phase_currents[2].v,
-                     phase_currents[2].w,
-                     phase_currents[3].u,
-                     phase_currents[3].v,
-                     phase_currents[3].w,
-                     dc_link_voltages[0],
-                     dc_link_voltages[1],
-                     dc_link_voltages[2],
-                     dc_link_voltages[3],
-                     position,
-                     speed,
-                     acceleration};
-
-    return new SPIStackOrder{998, slave_packet, master_packet};
+SPIStackOrder *create_start_velocity_control_order(double *velocity_reference) {
+    return new SPIStackOrder{
+        997, *new SPIPacket<sizeof(double), double>{velocity_reference},
+        *new SPIPacket<0>()};
 }
 
-SPIStackOrder *create_sync_order(bool *lcu_ready, bool *slave_ready) {
-    static SPIPacket<sizeof(bool), bool> master_packet{lcu_ready};
-
-    static SPIPacket<sizeof(bool), bool> slave_packet{slave_ready};
-
-    return new SPIStackOrder{997, slave_packet, master_packet};
+SPIStackOrder *create_start_current_control_order(double *d_current_reference,
+                                                  double *q_current_reference) {
+    return new SPIStackOrder{996,
+                             *new SPIPacket<sizeof(double) * 2, double, double>{
+                                 d_current_reference, q_current_reference},
+                             *new SPIPacket<0>()};
 }
 
-};  // namespace BCU::Shared::Communication
+SPIStackOrder *create_start_emulated_movement_order(double *d_current_reference,
+                                                    double *q_current_reference,
+                                                    double *angular_velocity) {
+    return new SPIStackOrder{
+        995,
+        *new SPIPacket<sizeof(double) * 3, double, double, double>{
+            d_current_reference, q_current_reference, angular_velocity},
+        *new SPIPacket<0>()};
+}
+
+SPIStackOrder *create_start_test_pwm_order(double *duty_cycle_u,
+                                           double *duty_cycle_v,
+                                           double *duty_cycle_w) {
+    return new SPIStackOrder{
+        994,
+        *new SPIPacket<sizeof(double) * 3, double, double, double>{
+            duty_cycle_u, duty_cycle_v, duty_cycle_w},
+        *new SPIPacket<0>()};
+}
+
+SPIStackOrder *create_stop_control_order() {
+    return new SPIStackOrder{993, *new SPIPacket<0>(), *new SPIPacket<0>()};
+}
+
+SPIStackOrder *create_enable_booster_order() {
+    return new SPIStackOrder{992, *new SPIPacket<0>(), *new SPIPacket<0>()};
+}
+
+SPIStackOrder *create_position_encoder_order(
+    std::array<double *, 3> position, std::array<double *, 3> velocity,
+    std::array<double *, 3> acceleration, std::array<Direction *, 3> direction,
+    double *average_position, double *max_velocity, bool *is_detecting) {
+    return new SPIStackOrder{
+        991, *new SPIPacket<0>(),
+        *new SPIPacket<
+            sizeof(double) * 12 + sizeof(Direction) * 3 + sizeof(bool), double,
+            double, double, double, double, double, double, double, double,
+            Direction, Direction, Direction, double, double, bool>(
+            position[0], position[1], position[2], velocity[0], velocity[1],
+            velocity[2], acceleration[0], acceleration[1], acceleration[2],
+            direction[0], direction[1], direction[2], average_position,
+            max_velocity, is_detecting)};
+}
+
+SPIStackOrder *create_force_dc_link_order(float *dc_link_voltage) {
+    return new SPIStackOrder{
+        990, *new SPIPacket<sizeof(float), float>{dc_link_voltage},
+        *new SPIPacket<0>()};
+}
+
+SPIStackOrder *create_unlock_dc_link_order() {
+    return new SPIStackOrder{989, *new SPIPacket<0>(), *new SPIPacket<0>()};
+}
+
+SPIStackOrder *create_commutation_settings_order(uint32_t *frequency_hz,
+                                                 uint32_t *dead_time_ns) {
+    return new SPIStackOrder{
+        988,
+        *new SPIPacket<sizeof(uint32_t) * 2, uint32_t, uint32_t>{frequency_hz,
+                                                                 dead_time_ns},
+        *new SPIPacket<0>()};
+}
+
+SPIStackOrder *create_motor_driver_order(
+    std::array<float *, 4> dc_link_voltage,
+    std::array<std::array<float *, 3>, 4> motor_phase_current,
+    std::array<PinState *, 4> gate_driver_fault,
+    std::array<PinState *, 4> gate_driver_ready) {
+    return new SPIStackOrder{
+        987, *new SPIPacket<0>(),
+        *new SPIPacket<
+            sizeof(float) * 4 + sizeof(PinState) * 8 + sizeof(float) * 12,
+            float, float, float, float, PinState, PinState, PinState, PinState,
+            PinState, PinState, PinState, PinState, float, float, float, float,
+            float, float, float, float, float, float, float, float>(
+            dc_link_voltage[0], dc_link_voltage[1], dc_link_voltage[2],
+            dc_link_voltage[3], gate_driver_fault[0], gate_driver_fault[1],
+            gate_driver_fault[2], gate_driver_fault[3], gate_driver_ready[0],
+            gate_driver_ready[1], gate_driver_ready[2], gate_driver_ready[3],
+            motor_phase_current[0][0], motor_phase_current[0][1],
+            motor_phase_current[0][2], motor_phase_current[1][0],
+            motor_phase_current[1][1], motor_phase_current[1][2],
+            motor_phase_current[2][0], motor_phase_current[2][1],
+            motor_phase_current[2][2], motor_phase_current[3][0],
+            motor_phase_current[3][1], motor_phase_current[3][2])};
+}
+
+}  // namespace BCU::Shared::Communication

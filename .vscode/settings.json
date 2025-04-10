@@ -95,7 +95,8 @@
     "typeinfo": "cpp",
     "valarray": "cpp",
     "variant": "cpp",
-    "format": "cpp"
+    "format": "cpp",
+    "text_encoding": "cpp"
   },
   "cortex-debug.variableUseNaturalFormat": true,
 }
