@@ -56,4 +56,26 @@ SPIStackOrder *create_start_space_vector_order(float *modulation_index,
                              *new SPIPacket<0>()};
 }
 
+SPIStackOrder *create_fix_dc_link_voltage_order(float *dc_link_voltage) {
+    return new SPIStackOrder{
+        993, *new SPIPacket<sizeof(float), float>{dc_link_voltage},
+        *new SPIPacket<0>()};
+}
+
+SPIStackOrder *create_unfix_dc_link_voltage_order() {
+    return new SPIStackOrder{992, *new SPIPacket<0>(), *new SPIPacket<0>()};
+}
+
+SPIStackOrder *create_dc_link_order(float *average_dc_link_voltage,
+                                    float *dc_link_voltage_1,
+                                    float *dc_link_voltage_2,
+                                    float *dc_link_voltage_3,
+                                    float *dc_link_voltage_4) {
+    return new SPIStackOrder{
+        991, *new SPIPacket<0>(),
+        *new SPIPacket<sizeof(float) * 5, float, float, float, float, float>{
+            average_dc_link_voltage, dc_link_voltage_1, dc_link_voltage_2,
+            dc_link_voltage_3, dc_link_voltage_4}};
+}
+
 }  // namespace BCU::Shared::Communication

@@ -25,4 +25,12 @@ SPIStackOrder *create_control_parameters_order(float *duty_cycle_u,
 SPIStackOrder *create_start_space_vector_order(float *modulation_index,
                                                float *modulation_frequency_hz);
 
+SPIStackOrder *create_fix_dc_link_voltage_order(float *dc_link_voltage);
+SPIStackOrder *create_unfix_dc_link_voltage_order();
+SPIStackOrder *create_dc_link_order(float *average_dc_link_voltage,
+                                    float *dc_link_voltage_1,
+                                    float *dc_link_voltage_2,
+                                    float *dc_link_voltage_3,
+                                    float *dc_link_voltage_4);
+
 }  // namespace BCU::Shared::Communication
