@@ -70,7 +70,7 @@ SPIStackOrder *create_enable_current_control_order(float *current_d_ref,
 SPIStackOrder *create_enable_velocity_control_order(float *velocity_ref) {
     return new SPIStackOrder{
         993,
-        *new SPIPacket<sizeof(float)>(velocity_ref),
+        *new SPIPacket<sizeof(float), float>(velocity_ref),
         *new SPIPacket<0>(),
     };
 }
@@ -80,8 +80,9 @@ SPIStackOrder *create_encoder_order(double *position, double *velocity,
     return new SPIStackOrder{
         992,
         *new SPIPacket<0>(),
-        *new SPIPacket<(sizeof(double) * 3) + sizeof(uint8_t)>(
-            position, velocity, acceleration, direction),
+        *new SPIPacket<(sizeof(double) * 3) + sizeof(uint8_t), double, double,
+                       double, uint8_t>(position, velocity, acceleration,
+                                        direction),
     };
 }
 
