@@ -1,0 +1,12 @@
+@startuml booster_sync
+
+participant "Control Station" as cs
+participant "BCU" as bcu
+participant "LCU" as lcu
+
+cs -> bcu: Enable Control
+bcu -> bcu: Waits until it detects the Vehicle
+bcu -> lcu: Enable DC Poles
+lcu -> lcu: Prepares DC Poles (20A current control on all EMS)
+lcu -> bcu: DC Poles Ready
+bcu -> bcu: Starts Control

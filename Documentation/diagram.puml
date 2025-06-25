@@ -1,0 +1,59 @@
+@startuml bcu_class_diagram
+
+set separator ::
+
+class Master::Board {
+    void start()
+    void update()
+}
+
+class Master::Communication::SPI {
+    void start()
+    void update()
+}
+
+class Master::Communication::Ethernet {
+    void start()
+    void update()
+
+    void request_enable_dc_poles()
+    void request_disable_dc_poles()
+}
+
+class Master::Sensors::PPUTemperature {
+    void update()
+
+    const float& get_temperature(size_t index)
+}
+
+class Master::Sensors::BoosterTemperature {
+    void update()
+
+    const float& get_temperature(size_t index)
+}
+
+class Master::Actuators::Inverter {
+    void enable()
+    void disable()
+}
+
+class Master::Actuators::LEDs {
+    void signal_connecting()
+    void signal_operational()
+    void signal_fault()
+    void signal_inverter_on()
+    void signal_inverter_off()
+}
+
+class Slave::Board {
+    void start()
+    void update()
+}
+
+class Slave::Communication::SPI {
+    void start()
+    void update()
+}
+
+
+@enduml

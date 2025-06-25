@@ -1,0 +1,40 @@
+@startuml bcu-components
+
+state Operational {
+    [*] --> Idle
+
+    Idle --> Precharge
+    
+    Precharge --> TestPWM
+    Precharge --> TestSVPWM
+    Precharge --> TestCurrentControl
+    Precharge --> WaitingForVehicle
+    
+    TestPWM --> Precharge
+    TestPWM --> Idle
+
+    TestSVPWM --> Precharge
+    TestSVPWM --> Idle
+
+    TestCurrentControl --> Precharge
+    TestCurrentControl --> Idle
+
+    WaitingForVehicle --> Precharge
+    WaitingForVehicle --> Idle
+    WaitingForVehicle --> CurrentControl
+    WaitingForVehicle --> SpeedControl
+
+    CurrentControl --> Precharge
+    CurrentControl --> Idle
+
+    SpeedControl --> Precharge
+    SpeedControl --> Idle
+
+}
+
+[*] --> Connecting
+Connecting --> Operational
+Operational --> Fault
+Fault --> Connecting : Hardware Reset
+
+@enduml
