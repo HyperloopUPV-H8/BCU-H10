@@ -9,10 +9,9 @@ struct SharedStateMachine {
 
     enum NestedState : uint8_t {
         Idle = 0,
-        Precharge = 1,
-        Ready = 2,
-        Boosting = 3,
-        Testing = 4
+        Ready = 1,
+        Boosting = 2,
+        Testing = 3
     };
 
     StateMachine general;
